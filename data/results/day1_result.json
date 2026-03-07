@@ -1,0 +1,132 @@
+{
+  "day": 1,
+  "scenario": "mostlikely",
+  "num_stops": 78,
+  "num_vehicles_used": 5,
+  "optimized_routes": [
+    {
+      "vehicle_id": 1,
+      "stop_sequence": [
+        63,
+        65,
+        66,
+        67,
+        3,
+        9,
+        6,
+        7,
+        14,
+        17,
+        12,
+        18
+      ],
+      "num_stops": 12,
+      "travel_time_min": 193,
+      "distance_km": 84.0
+    },
+    {
+      "vehicle_id": 2,
+      "stop_sequence": [
+        8,
+        13,
+        64,
+        68,
+        69,
+        72,
+        70,
+        41,
+        42,
+        43,
+        60,
+        10
+      ],
+      "num_stops": 12,
+      "travel_time_min": 190,
+      "distance_km": 60.3
+    },
+    {
+      "vehicle_id": 3,
+      "stop_sequence": [
+        16,
+        11,
+        5,
+        56,
+        54,
+        58,
+        57,
+        59,
+        15,
+        76,
+        78,
+        1,
+        2
+      ],
+      "num_stops": 13,
+      "travel_time_min": 179,
+      "distance_km": 55.1
+    },
+    {
+      "vehicle_id": 4,
+      "stop_sequence": [
+        4,
+        27,
+        25,
+        52,
+        23,
+        19,
+        55,
+        49,
+        48,
+        47,
+        21,
+        51,
+        35,
+        50,
+        22,
+        53,
+        20,
+        29,
+        30,
+        24
+      ],
+      "num_stops": 20,
+      "travel_time_min": 252,
+      "distance_km": 61.8
+    },
+    {
+      "vehicle_id": 5,
+      "stop_sequence": [
+        26,
+        28,
+        31,
+        32,
+        34,
+        33,
+        40,
+        39,
+        38,
+        37,
+        36,
+        45,
+        44,
+        46,
+        75,
+        62,
+        74,
+        73,
+        71
+      ],
+      "num_stops": 19,
+      "travel_time_min": 270,
+      "distance_km": 75.0
+    }
+  ],
+  "total_opt_time_min": 270,
+  "total_opt_dist_km": 336.2,
+  "naive_time_min": 1322,
+  "naive_dist_km": 375.7,
+  "time_saved_min": 1052,
+  "dist_saved_km": 39.5,
+  "cost_saved_inr": 98.75,
+  "efficiency_gain_pct": 79.6
+}
