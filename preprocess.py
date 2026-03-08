@@ -1,5 +1,7 @@
 import pandas as pd
 import json
+import sys
+
 
 def load_day_data(day=1, traffic_scenario="mostlikely"):
     """
@@ -9,14 +11,31 @@ def load_day_data(day=1, traffic_scenario="mostlikely"):
     """
 
     # ── 1. Load orders for this day ──────────────────────────────────────────
-    orders_df = pd.read_excel(
-        "data/orders/orders.xlsx",
-        sheet_name=f"Day {day}"
-    )
+    orders_path = "data/orders/orders.xlsx"
+    sheet_name  = f"Day {day}"
+    try:
+        orders_df = pd.read_excel(orders_path, sheet_name=sheet_name)
+    except FileNotFoundError:
+        raise FileNotFoundError(
+            f"❌ Orders file not found: '{orders_path}'. "
+            f"Make sure the data folder is in your working directory."
+        )
+    except ValueError:
+        raise ValueError(
+            f"❌ Sheet '{sheet_name}' not found in '{orders_path}'. "
+            f"Available days may differ from requested day={day}."
+        )
+
+    # Validate expected columns
+    required_cols = {"NODE_ID", "WEIGHT", "VOLUME", "SERVICE_TIME", "EAT", "LAT"}
+    missing = required_cols - set(orders_df.columns)
+    if missing:
+        raise KeyError(
+            f"❌ Missing columns in orders sheet: {missing}. "
+            f"Found columns: {list(orders_df.columns)}"
+        )
 
     # ── 2. Build stops list ──────────────────────────────────────────────────
-    # FIX: renamed 'eat'/'lat' to 'earliest_arrival'/'latest_arrival'
-    # to avoid collision with geographic latitude convention.
     def get_priority(eat, lat):
         window = lat - eat
         if window <= 60:    return "URGENT"
@@ -33,23 +52,31 @@ def load_day_data(day=1, traffic_scenario="mostlikely"):
             "weight_kg":        float(row["WEIGHT"]),
             "volume_m3":        float(row["VOLUME"]),
             "service_time":     int(row["SERVICE_TIME"]),
-            "earliest_arrival": eat,   # FIX: was "eat" — now unambiguous
-            "latest_arrival":   lat,   # FIX: was "lat" — no longer clashes with geo-lat
+            "earliest_arrival": eat,
+            "latest_arrival":   lat,
             "priority":         get_priority(eat, lat)
         })
 
     # ── 3. Load time matrix ──────────────────────────────────────────────────
-    time_df = pd.read_excel(
-        f"data/time_and_distance_matrices/day_{day}/time_matrix_{traffic_scenario}_{day}.xlsx",
-        index_col=0
-    )
+    time_path = f"data/time_and_distance_matrices/day_{day}/time_matrix_{traffic_scenario}_{day}.xlsx"
+    try:
+        time_df = pd.read_excel(time_path, index_col=0)
+    except FileNotFoundError:
+        raise FileNotFoundError(
+            f"❌ Time matrix not found: '{time_path}'. "
+            f"Check that day_{day} folder exists with the correct traffic scenario."
+        )
     time_matrix = time_df.values.astype(int).tolist()
 
     # ── 4. Load distance matrix ──────────────────────────────────────────────
-    dist_df = pd.read_excel(
-        f"data/time_and_distance_matrices/day_{day}/distance_matrix_{day}.xlsx",
-        index_col=0
-    )
+    dist_path = f"data/time_and_distance_matrices/day_{day}/distance_matrix_{day}.xlsx"
+    try:
+        dist_df = pd.read_excel(dist_path, index_col=0)
+    except FileNotFoundError:
+        raise FileNotFoundError(
+            f"❌ Distance matrix not found: '{dist_path}'. "
+            f"Check that day_{day} folder exists."
+        )
     dist_matrix = dist_df.values.tolist()
 
     return {
