@@ -1,0 +1,18 @@
+# Dependencies
+node_modules/
+.venv/
+venv/
+env/
+
+# Build outputs
+/frontend/dist/
+/frontend/build/
+*.pyc
+__pycache__/
+
+# Environment variables (SECURITY - NEVER COMMIT)
+.env
+.env.*
+
+# OS generated files
+.DS_Store
